@@ -35,7 +35,7 @@ class AppleScript:
 			- If the script cannot be read/compiled, a ScriptError is raised.
 		"""
 		if path:
-			url = NSURL.URLWithFilePath_(path)
+			url = NSURL.fileURLWithPath_(path)
 			self._script, errorinfo = NSAppleScript.alloc().initWithContentsOfURL_error_(url, None)
 			if errorinfo:
 				raise ScriptError(errorinfo)
