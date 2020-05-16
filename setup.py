@@ -5,7 +5,7 @@ except ImportError:
 
 setup(
 		name = "py-applescript",
-		version = "1.0.1",
+		version = "1.0.2",
 		description = "An easy-to-use Python wrapper for NSAppleScript, allowing Python scripts to communicate with AppleScripts and AppleScriptable applications.",
 		platforms = ['Mac OS X'],
 		license = 'Public Domain',
