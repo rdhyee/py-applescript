@@ -10,7 +10,7 @@ setup(
 		platforms = ['Mac OS X'],
 		license = 'Public Domain',
 		packages = ['applescript'],
-		requires = ['pyobjc'],
+		requires = ['pyobjc-core', 'pyobjc-framework-AppleScriptKit', 'pyobjc-framework-AppleScriptObjC'],
 		classifiers = [
 			'License :: Public Domain',
 			'Development Status :: 5 - Production/Stable',
