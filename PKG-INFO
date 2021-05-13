@@ -2,7 +2,7 @@ Metadata-Version: 1.1
 Name: py-applescript
 Version: 1.0.1
 Summary: An easy-to-use Python wrapper for NSAppleScript, allowing Python scripts to communicate with AppleScripts and AppleScriptable applications.
-Home-page: UNKNOWN
+Home-page: https://github.com/rdhyee/py-applescript
 Author: UNKNOWN
 Author-email: UNKNOWN
 License: Public Domain
