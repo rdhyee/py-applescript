@@ -1,3 +1,4 @@
+LICENSE
 README
 setup.cfg
 setup.py
@@ -8,4 +9,5 @@ py_applescript.egg-info/PKG-INFO
 py_applescript.egg-info/SOURCES.txt
 py_applescript.egg-info/dependency_links.txt
 py_applescript.egg-info/pbr.json
+py_applescript.egg-info/requires.txt
 py_applescript.egg-info/top_level.txt
