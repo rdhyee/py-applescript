@@ -131,15 +131,19 @@ This module contains common AE constants auto-generated from OS X header files. 
 Usage
 =====
 
+```py
 import applescript
+```
 
 # 1. Run script:
 
+```py
 applescript.AppleScript('say "Hello AppleScript"').run()
-
+```
 
 # 2. Call run handler and user-defined handlers with/without arguments:
 
+```py
 scpt = applescript.AppleScript('''
 	on run {arg1, arg2}
 		say arg1 & " " & arg2
@@ -157,10 +161,11 @@ scpt = applescript.AppleScript('''
 print(scpt.run('Python', 'Calling')) #-> None
 print(scpt.call('foo')) #-> "foobar"
 print(scpt.call('Bar', 3, 5)) #-> 15
-
+```
 
 # 3. A compiled script's state persists until the AppleScript instance is disposed:
 
+```py
 scpt = applescript.AppleScript('''
 	property _count : 0
 	
@@ -172,13 +177,14 @@ scpt = applescript.AppleScript('''
 print(scpt.run()) #-> 1
 print(scpt.run()) #-> 2
 print(scpt.run()) #-> 3
-
+```
 
 # 4. Errors will be reported:
 
+```py
 applescript.AppleScript('this is not a valid script')
 # applescript.ScriptError: A identifier can't go after this identifier. (-2740) range=12-19
-
+```
 
 
 Supported type mappings
