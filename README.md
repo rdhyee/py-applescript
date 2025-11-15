@@ -1,5 +1,23 @@
 py-applescript -- An easy-to-use Python wrapper for NSAppleScript, allowing Python scripts to communicate with AppleScripts and AppleScriptable applications.
 
+[![Python Version](https://img.shields.io/badge/python-2.7%20%7C%203.x-blue.svg)](https://www.python.org/)
+[![Platform](https://img.shields.io/badge/platform-macOS-lightgrey.svg)](https://www.apple.com/macos/)
+[![License](https://img.shields.io/badge/license-CC0%201.0-green.svg)](LICENSE)
+
+## Table of Contents
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Interface](#interface)
+- [Usage](#usage)
+- [Supported Type Mappings](#supported-type-mappings)
+- [Limitations](#limitations)
+- [Known Issues](#known-issues)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [See Also](#see-also)
 
 Features
 ========
@@ -25,13 +43,62 @@ Requirements
 Installation
 ============
 
+### Via pip (Recommended)
+
+```bash
+pip install py-applescript
+```
+
+### From Source
+
 To install the applescript package, cd to the py-applescript-x.x.x directory and run:
 
-  python setup.py install
+```bash
+python setup.py install
+```
 
 or:
 
-  python3 setup.py install
+```bash
+python3 setup.py install
+```
+
+### Verify Installation
+
+```python
+import applescript
+print(applescript.__all__)  # ['AppleScript', 'ScriptError', 'AEType', 'AEEnum', 'kMissingValue', 'kae']
+```
+
+Quick Start
+===========
+
+Here's a simple example to get you started:
+
+```python
+import applescript
+
+# Execute a simple AppleScript
+applescript.AppleScript('display dialog "Hello from Python!"').run()
+
+# Get information from Finder
+script = applescript.AppleScript('''
+    tell application "Finder"
+        return name of home
+    end tell
+''')
+username = script.run()
+print(f"Current user: {username}")
+
+# Pass arguments to AppleScript
+calculator = applescript.AppleScript('''
+    on run {x, y}
+        return x + y
+    end run
+''')
+result = calculator.run(5, 7)
+print(f"5 + 7 = {result}")  # Output: 5 + 7 = 12
+```
 
 
 Interface
@@ -252,6 +319,102 @@ Known issues
 - Object specifiers (AppleScript 'references') returned by NSAppleScript are not fully qualified - i.e. they do not contain the address of the application at which they were targeted - so cannot usefully be passed back to AppleScript in a subsequent call as AppleScript would then treat them as targeting the current process, which is almost probably incorrect. (FWIW, AppleScripts may themselves work around this limitation by wrapping a reference value in a script object and returning that, though this is clumsy as the next AppleScript to which the script object is passed must know how to unwrap it again.)
 
 - NSAppleScript may sometimes write a "NSMapInsert(): attempt to insert notAKeyMarker " warning to stderr when returning error information. This is a bug in NSAppleScript, but should not affect operation.
+
+
+Troubleshooting
+===============
+
+### Installation Issues
+
+**Problem**: `ImportError: No module named Foundation`
+
+**Solution**: Install PyObjC:
+```bash
+pip install pyobjc-core pyobjc-framework-AppleScriptKit pyobjc-framework-AppleScriptObjC
+```
+
+### Runtime Errors
+
+**Problem**: Script compiles but doesn't execute
+
+**Solution**: Check application permissions. Some applications require accessibility permissions in System Preferences > Security & Privacy > Privacy > Automation.
+
+**Problem**: `ScriptError: Application isn't running`
+
+**Solution**: Ensure the target application is running before sending commands:
+```python
+applescript.AppleScript('tell application "Safari" to activate').run()
+# Now Safari is running and ready for commands
+```
+
+**Problem**: Type conversion errors
+
+**Solution**: Ensure you're using supported types. Convert complex Python objects to basic types (dict, list, str, int, float) before passing to AppleScript.
+
+### Common Pitfalls
+
+1. **Handler naming**: User-defined handler names cannot be AppleScript keywords
+   ```python
+   # Wrong - 'count' is a keyword
+   script.call('count')
+
+   # Correct - use a custom name
+   script.call('myCount')
+   ```
+
+2. **File paths**: Always use POSIX paths and convert in AppleScript
+   ```python
+   script = applescript.AppleScript('''
+   on run {posixPath}
+       set theFile to POSIX file posixPath
+       -- now use theFile
+   end run
+   ''')
+   script.run('/Users/username/file.txt')
+   ```
+
+3. **State persistence**: Remember that script state persists between calls
+   ```python
+   # Properties retain state
+   script = applescript.AppleScript('property x : 0')
+   # x remains 0 across multiple calls to script methods
+   ```
+
+
+FAQ
+===
+
+**Q: Does this work on Windows or Linux?**
+
+A: No. AppleScript is macOS-specific. This library requires macOS and will not work on other platforms.
+
+**Q: Can I use this to control any macOS application?**
+
+A: You can control any "AppleScriptable" application. Check an application's scripting dictionary in Script Editor (File > Open Dictionary) to see what commands it supports.
+
+**Q: How do I find an application's scripting commands?**
+
+A: Open macOS Script Editor, go to File > Open Dictionary, select the application, and browse available commands and objects.
+
+**Q: Is this library actively maintained?**
+
+A: The library is stable and feature-complete for its intended scope. See [ROADMAP.md](ROADMAP.md) for potential future enhancements.
+
+**Q: How does this compare to using osascript?**
+
+A: py-applescript provides better integration with Python (native type conversion, persistent script state, better error handling) compared to shelling out to osascript.
+
+**Q: What about the old appscript library?**
+
+A: appscript is deprecated and unmaintained. py-applescript is a modern alternative that doesn't depend on legacy Carbon APIs.
+
+
+Contributing
+============
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+For feature requests and planned improvements, see [ROADMAP.md](ROADMAP.md).
 
 
 See Also
